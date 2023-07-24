@@ -18,10 +18,7 @@ export class user extends Document{
    @Prop()
    mobileNumber:Number
 
-   @Prop()
-   address:String
-
-   @Prop()
+    @Prop()
    gender:String
 
    @Prop()
@@ -36,9 +33,10 @@ export class user extends Document{
    @Prop()
    city:String
 
-   @Prop()
+   @Prop({type:Types.ObjectId})
    freelancer:ObjectId
 }
 
+export const userSchema = SchemaFactory.createForClass(user)
 
 
