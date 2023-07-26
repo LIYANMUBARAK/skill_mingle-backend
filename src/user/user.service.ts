@@ -85,4 +85,25 @@ export class UserService {
             console.log(error.message)
         }
     }
+
+    async getUser(phoneNumber:any){
+        try {
+            console.log(phoneNumber)
+           const number=parseInt(phoneNumber)
+           const phoneNumberWithCountryCode=`91${number}`
+           console.log(phoneNumberWithCountryCode)
+           const userExist=await this.userModel.findOne({mobileNumber:phoneNumberWithCountryCode})
+           console.log(userExist)
+           if(userExist){
+            const payload = {sub:userExist._id,email:userExist.email}
+                    const token = await this.jwtService.signAsync(payload)
+            return { token:token,user:userExist,id:userExist._id }
+           }
+           else{
+            return {userExistError:"User not found"}
+           }
+        } catch (error) {
+            console.log(error.message)
+        }
+    }
 }

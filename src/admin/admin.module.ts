@@ -3,11 +3,15 @@ import { AdminController } from './admin.controller';
 import { AdminService } from './admin.service';
 import { MongooseModule } from '@nestjs/mongoose';
 import { adminSchema } from '../schemas/adminModel';
+import { categorySchema } from '../schemas/categoryModel';
 
 
 @Module({
   imports:[MongooseModule.forFeature([
-    {name:'admin',schema:adminSchema}
+    {name:'admin',schema:adminSchema},
+    {
+      name:'category',schema:categorySchema
+    }
   ])],
   controllers: [AdminController],
   providers: [AdminService]

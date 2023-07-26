@@ -3,6 +3,8 @@ import { JwtService } from '@nestjs/jwt';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { admin } from '../schemas/adminModel';
+import { category } from '../schemas/categoryModel';
+import { categoryDto } from '../dto/categoryDto';
 
 const bcrypt = require('bcrypt')
 
@@ -11,10 +13,10 @@ export class AdminService {
 
 
     constructor(  @InjectModel('admin') private readonly adminModel: Model<admin>,
-    private jwtService:JwtService,){}
+    private jwtService:JwtService,@InjectModel('category') private readonly categoryModel: Model<category>){}
 
     async verifyLogin(loginForm){
-        
+      try {
         const {email,password}=loginForm
         const admin=await this.adminModel.findOne({email})
         if(admin){
@@ -31,6 +33,32 @@ export class AdminService {
     else{
         return {emailError:"Email is incorrect"}
     }
+    
+      } catch (error) {
+        console.log(error.message)
+      }  
+        
+    }
+
+    async addCategory(categoryData){
+    try {
+        const { categoryName }=categoryData
+        const categoryExist = await this.categoryModel.findOne({name:categoryName})
+        if(categoryExist)
+        {
+            return {categoryExistError:"Cateory already exists"}
+        }
+        else{
+            const category = new this.categoryModel({
+                name: categoryName,
+             })
+            await category.save();
+            return { cateogrySave: true }
+        }
+    } catch (error) {
+        console.log(error.message)
+    }
+    
     }
 
 }
