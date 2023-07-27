@@ -1,10 +1,11 @@
 import { Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
+import { Model, Types } from 'mongoose';
 import { admin } from '../schemas/adminModel';
 import { category } from '../schemas/categoryModel';
 import { categoryDto } from '../dto/categoryDto';
+import { subcategory } from '../schemas/subcategoryModel';
 
 const bcrypt = require('bcrypt')
 
@@ -13,7 +14,8 @@ export class AdminService {
 
 
     constructor(  @InjectModel('admin') private readonly adminModel: Model<admin>,
-    private jwtService:JwtService,@InjectModel('category') private readonly categoryModel: Model<category>){}
+    private jwtService:JwtService,@InjectModel('category') private readonly categoryModel: Model<category>,
+    @InjectModel('subcategory') private readonly subcategoryModel: Model<subcategory>){}
 
     async verifyLogin(loginForm){
       try {
@@ -61,4 +63,31 @@ export class AdminService {
     
     }
 
+
+    async loadCategoriesAndSubCategories(){
+        try {
+            const categories = await this.categoryModel.find({})
+            const subcategories = await this.subcategoryModel.find({})
+            return {categories:categories,subcategories:subcategories}
+        } catch (error) {
+            console.log(error.message)
+        }
+    }
+
+    async addSubcategory(subcategoryData){
+        try {
+            const subcategoryName=subcategoryData.subcategoryName
+         
+            const categoryId = new Types.ObjectId(subcategoryData.categoryId)
+       
+            const subcategory=new this.subcategoryModel({
+                name: subcategoryName,
+                categoryId:categoryId
+            })
+            await subcategory.save()
+            return {subcategorySave:true}
+        } catch (error) {
+            console.log(error.message)
+        }
+    }
 }
