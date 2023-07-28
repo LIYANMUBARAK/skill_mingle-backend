@@ -64,6 +64,27 @@ export class AdminService {
     }
 
 
+    async editCategory(categoryData){
+        try {
+            const { newCategoryName,id }=categoryData
+
+            const categoryExist = await this.categoryModel.findOne({name:newCategoryName})
+            if(categoryExist)
+            {
+                return {categoryExistError:"Category already exists"}
+            }
+            else{
+                const categoryId = new Types.ObjectId(id)
+                await this.categoryModel.findOneAndUpdate({_id:categoryId},{name:newCategoryName})
+                return { cateogrySave: true }
+            }
+        } catch (error) {
+            console.log(error.message)
+        }
+        
+        }
+
+
     async loadCategoriesAndSubCategories(){
         try {
             const categories = await this.categoryModel.find({})

@@ -1,8 +1,9 @@
-import { Controller,Body, Get, Param, Post  } from '@nestjs/common';
+import { Controller,Body, Get, Param, Post, Patch  } from '@nestjs/common';
 import { AdminService } from './admin.service';
 import { loginFormDto } from '../dto/loginFormDto';
 import { categoryDto } from '../dto/categoryDto';
 import { subcategoryDto } from '../dto/subCategoryDto';
+import { editCategoryDto } from '../dto/editCategory';
 
 @Controller('admin')
 export class AdminController {
@@ -28,5 +29,10 @@ export class AdminController {
     @Post('addSubcategory')
     addSubcategory(@Body() subcategoryData:subcategoryDto){
     return this.adminService.addSubcategory(subcategoryData)
-}
+    }
+
+    @Patch('editCategory')
+    editCategory(@Body() categoryData:editCategoryDto){
+        return this.adminService.editCategory(categoryData)
+    }
 }
