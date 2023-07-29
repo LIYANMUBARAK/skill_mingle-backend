@@ -1,10 +1,12 @@
 import { Injectable } from '@nestjs/common'
 import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
+import { Model, Types } from 'mongoose';
 import { CreateUserDto } from 'src/dto/userDto';
 import { loginFormDto } from 'src/dto/loginFormDto';
 import { user } from 'src/schemas/userModel';
 import { JwtService } from '@nestjs/jwt';
+import { category } from 'src/schemas/categoryModel';
+import { subcategory } from 'src/schemas/subcategoryModel';
 
 const bcrypt = require('bcrypt')
 
@@ -13,6 +15,8 @@ export class UserService {
 
     constructor(
         @InjectModel('user') private readonly userModel: Model<user>,
+        @InjectModel('category') private readonly categoryModel: Model<category>,
+        @InjectModel('subcategory') private readonly subcategoryModel: Model<subcategory>,
         private jwtService:JwtService,
     ) { }
 
@@ -88,12 +92,12 @@ export class UserService {
 
     async getUser(phoneNumber:any){
         try {
-            console.log(phoneNumber)
+        
            const number=parseInt(phoneNumber)
            const phoneNumberWithCountryCode=`91${number}`
-           console.log(phoneNumberWithCountryCode)
+           
            const userExist=await this.userModel.findOne({mobileNumber:phoneNumberWithCountryCode})
-           console.log(userExist)
+          
            if(userExist){
             const payload = {sub:userExist._id,email:userExist.email}
                     const token = await this.jwtService.signAsync(payload)
@@ -102,6 +106,35 @@ export class UserService {
            else{
             return {userExistError:"User not found"}
            }
+        } catch (error) {
+            console.log(error.message)
+        }
+    }
+
+    async getUserUsingId(id:any){
+        try {
+       
+            const userId = new Types.ObjectId(id)
+           
+           const user=await this.userModel.findOne({_id:userId})
+           
+           if(user){
+            return { user:user}
+           }
+           else{
+            return {userExistError:"User not found"}
+           }
+        } catch (error) {
+            console.log(error.message)
+        }
+    }
+
+
+    async loadCategoriesAndSubCategories(){
+        try {
+            const categories = await this.categoryModel.find({})
+            const subcategories = await this.subcategoryModel.find({})
+            return {categories:categories,subcategories:subcategories}
         } catch (error) {
             console.log(error.message)
         }
