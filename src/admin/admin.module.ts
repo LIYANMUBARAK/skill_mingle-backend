@@ -5,6 +5,7 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { adminSchema } from '../schemas/adminModel';
 import { categorySchema } from '../schemas/categoryModel';
 import { subcategorySchema } from '../schemas/subcategoryModel';
+import { userSchema } from '../schemas/userModel';
 
 @Module({
   imports:[MongooseModule.forFeature([
@@ -14,6 +15,9 @@ import { subcategorySchema } from '../schemas/subcategoryModel';
     },
     {
       name:'subcategory',schema:subcategorySchema
+    },
+    {
+      name:'user',schema:userSchema
     }
   ])],
   controllers: [AdminController],

@@ -1,9 +1,10 @@
-import { Controller,Body, Get, Param, Post, Patch  } from '@nestjs/common';
+import { Controller,Body, Get, Param, Post, Patch, Delete, Query  } from '@nestjs/common';
 import { AdminService } from './admin.service';
 import { loginFormDto } from '../dto/loginFormDto';
 import { categoryDto } from '../dto/categoryDto';
 import { subcategoryDto } from '../dto/subCategoryDto';
 import { editCategoryDto } from '../dto/editCategory';
+import { userIdDto } from '../dto/userId';
 
 @Controller('admin')
 export class AdminController {
@@ -34,5 +35,28 @@ export class AdminController {
     @Patch('editCategory')
     editCategory(@Body() categoryData:editCategoryDto){
         return this.adminService.editCategory(categoryData)
+    }
+
+    @Delete('deleteCategory')
+    deleteCategory(@Query('id') id:string){
+        console.log(id)
+        return this.adminService.deleteCategory(id)
+    }
+    
+    @Get('getAllUsers')
+    getAllUser(){
+      return this.adminService.getAllUsers()
+    }  
+
+    @Patch('blockUser')
+    blockUser(@Body() userId:userIdDto){
+        console.log(userId)
+        return this.adminService.blockUser(userId)
+    }
+
+    @Patch('unblockUser')
+   unblockUser(@Body() userId:userIdDto){
+        console.log(userId)
+        return this.adminService.unblockUser(userId)
     }
 }

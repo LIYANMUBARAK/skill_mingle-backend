@@ -6,6 +6,7 @@ import { admin } from '../schemas/adminModel';
 import { category } from '../schemas/categoryModel';
 import { categoryDto } from '../dto/categoryDto';
 import { subcategory } from '../schemas/subcategoryModel';
+import { user } from 'src/schemas/userModel';
 
 const bcrypt = require('bcrypt')
 
@@ -15,7 +16,8 @@ export class AdminService {
 
     constructor(  @InjectModel('admin') private readonly adminModel: Model<admin>,
     private jwtService:JwtService,@InjectModel('category') private readonly categoryModel: Model<category>,
-    @InjectModel('subcategory') private readonly subcategoryModel: Model<subcategory>){}
+    @InjectModel('subcategory') private readonly subcategoryModel: Model<subcategory>,
+    @InjectModel('user') private readonly userModel:Model<user>){}
 
     async verifyLogin(loginForm){
       try {
@@ -111,4 +113,49 @@ export class AdminService {
             console.log(error.message)
         }
     }
+
+    async deleteCategory(id){
+        try {
+            
+            const categoryId = new Types.ObjectId(id)
+    
+             await this.categoryModel.deleteOne({_id:categoryId})
+             return true
+            
+        } catch (error) {
+            console.log(error.message)
+        }
+        
+        }
+
+        async getAllUsers(){
+            try{
+                const allUsers = await this.userModel.find({})
+                return {users:allUsers} 
+            }catch(error){
+                console.log(error.message)
+            }
+        }
+
+        async blockUser(userData){
+          try {
+            const id=userData.userId
+            const userId = new Types.ObjectId(id)
+            await this.userModel.findOneAndUpdate({_id:userId},{isBlocked:true})
+            return true
+          } catch (error) {
+            console.log(error.message)
+          }  
+        }
+
+        async unblockUser(userData){
+            try {
+              const id=userData.userId
+              const userId = new Types.ObjectId(id)
+              await this.userModel.findOneAndUpdate({_id:userId},{isBlocked:false})
+              return true
+            } catch (error) {
+              console.log(error.message)
+            }  
+          }
 }

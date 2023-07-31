@@ -33,6 +33,8 @@ export class UserController {
     loadCategoriesAndSubCategories(){
         return this.userService.loadCategoriesAndSubCategories()
     }
+
+ 
 }
 
 

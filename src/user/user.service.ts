@@ -48,7 +48,8 @@ export class UserService {
                             mobileNumber: mobileNumber,
                             gender: gender,
                             country: country,
-                            city: city
+                            city: city,
+                            isBlocked:false
                         })
                         await user.save();
                         return { userSave: true }
@@ -139,4 +140,6 @@ export class UserService {
             console.log(error.message)
         }
     }
+
+ 
 }

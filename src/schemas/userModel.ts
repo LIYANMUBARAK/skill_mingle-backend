@@ -35,6 +35,9 @@ export class user extends Document{
 
    @Prop({type:Types.ObjectId})
    freelancer:ObjectId
+
+   @Prop()
+   isBlocked:boolean
 }
 
 export const userSchema = SchemaFactory.createForClass(user)
