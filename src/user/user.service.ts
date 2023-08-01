@@ -17,7 +17,7 @@ export class UserService {
         @InjectModel('user') private readonly userModel: Model<user>,
         @InjectModel('category') private readonly categoryModel: Model<category>,
         @InjectModel('subcategory') private readonly subcategoryModel: Model<subcategory>,
-        private jwtService:JwtService,
+        private jwtService: JwtService,
     ) { }
 
     async registerUser(registerForm: CreateUserDto): Promise<any> {
@@ -49,7 +49,7 @@ export class UserService {
                             gender: gender,
                             country: country,
                             city: city,
-                            isBlocked:false
+                            isBlocked: false
                         })
                         await user.save();
                         return { userSave: true }
@@ -63,83 +63,85 @@ export class UserService {
 
     }
 
-   async loginUser(loginForm:loginFormDto){
+    async loginUser(loginForm: loginFormDto) {
         try {
-            const {email,password}=loginForm
-            const user= await this.userModel.findOne({email})
-            if(user)
-            {
-                
+            const { email, password } = loginForm
+            const user = await this.userModel.findOne({ email })
+            if (user) {
+                if (user.isBlocked === false) {
+                    const hashPassword = await bcrypt.hash(password, 10)
+                    const passwordCheck = await bcrypt.compare(password, user.password)
 
-                const hashPassword = await bcrypt.hash(password,10)
-                const passwordCheck = await bcrypt.compare(password,user.password)
-                
-                if(passwordCheck){
-                    const payload = {sub:user._id,email:email}
-                    const token = await this.jwtService.signAsync(payload)
-                    return { token:token,id:user._id,userData:user }
-                } 
-                else{
-                    return { passwordError:"Password is Incorrect" }
+                    if (passwordCheck) {
+                        const payload = { sub: user._id, email: email }
+                        const token = await this.jwtService.signAsync(payload)
+                        return { token: token, id: user._id, userData: user }
+                    }
+                    else {
+                        return { passwordError: "Password is Incorrect" }
+                    }
+                }
+                else {
+                    return { isBlockedError: "User is blocked by the Admin" }
                 }
             }
-            else{
-                return { emailError:"Email not found" }
+            else {
+                return { emailError: "Email not found" }
             }
         } catch (error) {
             console.log(error.message)
         }
     }
 
-    async getUser(phoneNumber:any){
+    async getUser(phoneNumber: any) {
         try {
-        
-           const number=parseInt(phoneNumber)
-           const phoneNumberWithCountryCode=`91${number}`
-           
-           const userExist=await this.userModel.findOne({mobileNumber:phoneNumberWithCountryCode})
-          
-           if(userExist){
-            const payload = {sub:userExist._id,email:userExist.email}
-                    const token = await this.jwtService.signAsync(payload)
-            return { token:token,user:userExist,id:userExist._id }
-           }
-           else{
-            return {userExistError:"User not found"}
-           }
+
+            const number = parseInt(phoneNumber)
+            const phoneNumberWithCountryCode = `91${number}`
+
+            const userExist = await this.userModel.findOne({ mobileNumber: phoneNumberWithCountryCode })
+
+            if (userExist) {
+                const payload = { sub: userExist._id, email: userExist.email }
+                const token = await this.jwtService.signAsync(payload)
+                return { token: token, user: userExist, id: userExist._id }
+            }
+            else {
+                return { userExistError: "User not found" }
+            }
         } catch (error) {
             console.log(error.message)
         }
     }
 
-    async getUserUsingId(id:any){
+    async getUserUsingId(id: any) {
         try {
-       
+
             const userId = new Types.ObjectId(id)
-           
-           const user=await this.userModel.findOne({_id:userId})
-           
-           if(user){
-            return { user:user}
-           }
-           else{
-            return {userExistError:"User not found"}
-           }
+
+            const user = await this.userModel.findOne({ _id: userId })
+
+            if (user) {
+                return { user: user }
+            }
+            else {
+                return { userExistError: "User not found" }
+            }
         } catch (error) {
             console.log(error.message)
         }
     }
 
 
-    async loadCategoriesAndSubCategories(){
+    async loadCategoriesAndSubCategories() {
         try {
             const categories = await this.categoryModel.find({})
             const subcategories = await this.subcategoryModel.find({})
-            return {categories:categories,subcategories:subcategories}
+            return { categories: categories, subcategories: subcategories }
         } catch (error) {
             console.log(error.message)
         }
     }
 
- 
+
 }
