@@ -8,5 +8,6 @@ export class CreateUserDto{
     readonly gender:string
     readonly country:string
     readonly city:string
+    readonly dateOfJoin:Date
 }
 

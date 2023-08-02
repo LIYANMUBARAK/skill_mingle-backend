@@ -40,6 +40,7 @@ export class UserService {
                         return { userNameExist: "User Name is already used" }
                     }
                     else {
+                        
                         const user = new this.userModel({
                             name: name,
                             userName: userName,
@@ -49,10 +50,12 @@ export class UserService {
                             gender: gender,
                             country: country,
                             city: city,
-                            isBlocked: false
+                            isBlocked: false,
+                            dateOfJoin:Date.now()
                         })
                         await user.save();
                         return { userSave: true }
+
                     }
                 }
             }
@@ -99,7 +102,7 @@ export class UserService {
             const number = parseInt(phoneNumber)
             const phoneNumberWithCountryCode = `91${number}`
 
-            const userExist = await this.userModel.findOne({ mobileNumber: phoneNumberWithCountryCode })
+            const userExist = await this.userModel.findOne({ mobileNumber: number })
 
             if (userExist) {
                 const payload = { sub: userExist._id, email: userExist.email }

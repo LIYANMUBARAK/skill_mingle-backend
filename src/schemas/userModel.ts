@@ -38,6 +38,13 @@ export class user extends Document{
 
    @Prop()
    isBlocked:boolean
+
+   @Prop()
+   profilePic:string
+
+   @Prop({default:Date.now})
+   dateOfJoin:Date
+
 }
 
 export const userSchema = SchemaFactory.createForClass(user)
