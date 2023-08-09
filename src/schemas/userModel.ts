@@ -34,7 +34,11 @@ export class user extends Document{
    city:String
 
    @Prop({type:Types.ObjectId})
-   freelancer:ObjectId
+   freelancerId:ObjectId
+
+   @Prop()
+   isFreelancer:boolean
+
 
    @Prop()
    isBlocked:boolean

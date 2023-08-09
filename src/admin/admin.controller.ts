@@ -59,4 +59,9 @@ export class AdminController {
         console.log(userId)
         return this.adminService.unblockUser(userId)
     }
+
+    @Get('getAllFreelancers')
+    getAllFreelancers(){
+      return this.adminService.getAllFreelancers()
+    }  
 }

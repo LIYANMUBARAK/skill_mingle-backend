@@ -158,4 +158,15 @@ export class AdminService {
               console.log(error.message)
             }  
           }
+
+        
+          async getAllFreelancers(){
+            try{
+                const allFreelancers = await this.userModel.find({ freelancerId: { $exists: true },isFreelancer:{$exists:true} })
+                
+                return {freelancers:allFreelancers} 
+            }catch(error){
+                console.log(error.message)
+            }
+        }
 }

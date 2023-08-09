@@ -7,6 +7,7 @@ import { user } from 'src/schemas/userModel';
 import { JwtService } from '@nestjs/jwt';
 import { category } from 'src/schemas/categoryModel';
 import { subcategory } from 'src/schemas/subcategoryModel';
+import { freelancer } from 'src/schemas/freelancerModel';
 
 const bcrypt = require('bcrypt')
 
@@ -17,6 +18,7 @@ export class UserService {
         @InjectModel('user') private readonly userModel: Model<user>,
         @InjectModel('category') private readonly categoryModel: Model<category>,
         @InjectModel('subcategory') private readonly subcategoryModel: Model<subcategory>,
+        @InjectModel('freelancer') private readonly freelancerModel: Model<freelancer>,
         private jwtService: JwtService,
     ) { }
 
@@ -146,5 +148,48 @@ export class UserService {
         }
     }
 
+    
+    async freelancerApply(freelancerApplyForm){
+        try {
+            let personalWebsite =''
+            let instagram =''
+            let facebook =''
+            let twitter =''
+            const {userId,skills,languages,occupation,education,certification,description}=freelancerApplyForm
+            if(freelancerApplyForm.personalWebsite){
+             personalWebsite=freelancerApplyForm.personalWebsite
+            }
+            if(freelancerApplyForm.instagram){
+                const instagram=freelancerApplyForm.instagram
+            }
+            if(freelancerApplyForm.facebook){
+                const facebook=freelancerApplyForm.facebook
+            }
+            if(freelancerApplyForm.twitter){
+                const twitter=freelancerApplyForm.twitter
+            }
+            const userObjectId = new Types.ObjectId(userId)
+            const freelancer =await new this.freelancerModel({
+                userId: userObjectId,
+                skills: skills,
+                languages: languages,
+                occupation: occupation,
+                education: education,
+                certification: certification,
+                description: description,
+                personalWebsite:personalWebsite,
+                instagram:instagram,
+                facebook:facebook,
+                twitter:twitter
+            }).save();
+
+            const freelancerId=freelancer._id
+            
+            await this.userModel.updateOne({_id:userId},{$set:{freelancerId:freelancerId,isFreelancer:false}})
+            return {freelancerApply:true}
+        } catch (error) {
+            console.log(error.message)
+        }
+    }
 
 }

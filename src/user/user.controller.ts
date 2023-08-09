@@ -3,6 +3,7 @@ import { UserService } from './user.service';
 import { CreateUserDto } from '../dto/userDto';
 import { loginFormDto } from '../dto/loginFormDto';
 import { userIdDto } from '../dto/userId';
+import { freelancerApplyDto } from '../dto/freelancerDto'
 
 @Controller('user')
 export class UserController {
@@ -34,7 +35,10 @@ export class UserController {
         return this.userService.loadCategoriesAndSubCategories()
     }
 
- 
+    @Post('freelancerApply')
+    freelancerApply(@Body() freelancerApplyForm:freelancerApplyDto){
+      return this.userService.freelancerApply(freelancerApplyForm)
+      }
 }
 
 
