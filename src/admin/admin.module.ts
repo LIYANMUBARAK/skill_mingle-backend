@@ -6,6 +6,7 @@ import { adminSchema } from '../schemas/adminModel';
 import { categorySchema } from '../schemas/categoryModel';
 import { subcategorySchema } from '../schemas/subcategoryModel';
 import { userSchema } from '../schemas/userModel';
+import { freelancerSchema } from '../schemas/freelancerModel';
 
 @Module({
   imports:[MongooseModule.forFeature([
@@ -18,6 +19,9 @@ import { userSchema } from '../schemas/userModel';
     },
     {
       name:'user',schema:userSchema
+    },
+    {
+      name:'freelancer',schema:freelancerSchema
     }
   ])],
   controllers: [AdminController],

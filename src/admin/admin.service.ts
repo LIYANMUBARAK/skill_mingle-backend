@@ -7,6 +7,9 @@ import { category } from '../schemas/categoryModel';
 import { categoryDto } from '../dto/categoryDto';
 import { subcategory } from '../schemas/subcategoryModel';
 import { user } from 'src/schemas/userModel';
+import { freelancer } from 'src/schemas/freelancerModel';
+
+
 
 const bcrypt = require('bcrypt')
 
@@ -17,7 +20,8 @@ export class AdminService {
     constructor(  @InjectModel('admin') private readonly adminModel: Model<admin>,
     private jwtService:JwtService,@InjectModel('category') private readonly categoryModel: Model<category>,
     @InjectModel('subcategory') private readonly subcategoryModel: Model<subcategory>,
-    @InjectModel('user') private readonly userModel:Model<user>){}
+    @InjectModel('user') private readonly userModel:Model<user>,
+    @InjectModel('freelancer') private readonly freelancerModel:Model<freelancer>){}
 
     async verifyLogin(loginForm){
       try {
@@ -166,6 +170,33 @@ export class AdminService {
                 
                 return {freelancers:allFreelancers} 
             }catch(error){
+                console.log(error.message)
+            }
+        }
+
+        async freelanceApprove(id){
+            try {
+                const {userId} = id
+                const userObjectId=new Types.ObjectId(userId)
+               console.log(userObjectId)
+                await this.userModel.updateOne({_id:userObjectId},{$set:{isFreelancer:true}})
+                return {freelancerApprove:true}
+            } catch (error) {
+                console.log(error.message)
+            }
+        }
+
+        async freelanceReject(id){
+            try {
+                const {userId} = id
+                const userObjectId=new Types.ObjectId(userId)
+                console.log(userObjectId)
+                const userData = await this.userModel.findOne({_id:userObjectId})
+                const freelancerId = userData.freelancerId
+                await this.userModel.updateOne({_id:userObjectId},{$unset:{freelancerId}})
+                await this.freelancerModel.deleteOne({_id:freelancerId})
+                return {freelancerReject:true}
+            } catch (error) {
                 console.log(error.message)
             }
         }
