@@ -94,7 +94,7 @@ export class AdminService {
     async loadCategoriesAndSubCategories(){
         try {
             const categories = await this.categoryModel.find({})
-            const subcategories = await this.subcategoryModel.find({})
+            const subcategories = await this.subcategoryModel.find({}).populate("categoryId")
             return {categories:categories,subcategories:subcategories}
         } catch (error) {
             console.log(error.message)
