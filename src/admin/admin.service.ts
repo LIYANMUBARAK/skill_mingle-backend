@@ -104,7 +104,11 @@ export class AdminService {
     async addSubcategory(subcategoryData){
         try {
             const subcategoryName=subcategoryData.subcategoryName
-         
+            const subcategoryExist = await this.subcategoryModel.findOne({name:subcategoryName})
+           if(subcategoryExist){
+            return {subcategoryExistError:"Subcategory already exists"}
+           }else{
+           
             const categoryId = new Types.ObjectId(subcategoryData.categoryId)
        
             const subcategory=new this.subcategoryModel({
@@ -113,6 +117,7 @@ export class AdminService {
             })
             await subcategory.save()
             return {subcategorySave:true}
+        }
         } catch (error) {
             console.log(error.message)
         }
@@ -190,12 +195,36 @@ export class AdminService {
             try {
                 const {userId} = id
                 const userObjectId=new Types.ObjectId(userId)
-                console.log(userObjectId)
+                
                 const userData = await this.userModel.findOne({_id:userObjectId})
                 const freelancerId = userData.freelancerId
                 await this.userModel.updateOne({_id:userObjectId},{$unset:{freelancerId}})
                 await this.freelancerModel.deleteOne({_id:freelancerId})
                 return {freelancerReject:true}
+            } catch (error) {
+                console.log(error.message)
+            }
+        }
+        
+        async getSubcategoryUsingId(id){
+            try {
+                console.log(id)
+                
+                const subcategoryObjectId = new Types.ObjectId(id)
+                console.group(subcategoryObjectId)
+                const subcategoryData = await this.subcategoryModel.findOne({_id:subcategoryObjectId})
+                return {subcategoryData:subcategoryData}
+            } catch (error) {
+                console.log(error.message)
+            }
+        }
+
+
+        async deleteSubcategoryUsingId(id){
+            try {
+                const subcategoryObjectId = new Types.ObjectId(id) 
+                await this.subcategoryModel.findOneAndDelete({_id:subcategoryObjectId})
+                return {subcategoryDelete:true}
             } catch (error) {
                 console.log(error.message)
             }

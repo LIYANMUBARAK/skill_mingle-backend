@@ -78,6 +78,20 @@ console.log(id)
         return this.adminService.freelanceReject(id)
     }
 
+    
+    @Get('getSubcategory/:id')
+    getSubcategory(@Param('id') id:string) {
+        console.log(id)
+        return this.adminService.getSubcategoryUsingId(id)
+    }
+    
+
+    @Get('deleteSubcategory/:id')
+    deleteSubcategory(@Param('id') id:string) {
+        console.log(id)
+        return this.adminService.deleteSubcategoryUsingId(id)
+    }
+    
    
 
   
