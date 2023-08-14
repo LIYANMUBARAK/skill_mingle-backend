@@ -91,6 +91,11 @@ console.log(id)
         console.log(id)
         return this.adminService.deleteSubcategoryUsingId(id)
     }
+
+    @Patch('editSubcategory')
+    editSubcategory(@Body() subcategoryData:Object){
+        return this.adminService.editSubcategory(subcategoryData)
+    }
     
    
 
