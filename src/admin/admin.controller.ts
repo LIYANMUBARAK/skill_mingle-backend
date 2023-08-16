@@ -97,7 +97,12 @@ console.log(id)
         return this.adminService.editSubcategory(subcategoryData)
     }
     
-   
+
+    @Get('getAllGigs')
+    getAllGigs() { 
+        return this.adminService.getAllGigs()
+    }
+    
 
   
 

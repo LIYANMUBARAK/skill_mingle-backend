@@ -7,38 +7,48 @@ import { freelancerApplyDto } from '../dto/freelancerDto'
 
 @Controller('user')
 export class UserController {
-  constructor(private readonly userService: UserService){} 
+  constructor(private readonly userService: UserService) { }
 
   @Post('signup')
-  registerUser(@Body() registerForm:CreateUserDto){
+  registerUser(@Body() registerForm: CreateUserDto) {
     return this.userService.registerUser(registerForm)
-    }
-    
+  }
+
   @Post('login')
-  loginUser(@Body() loginForm:loginFormDto){
+  loginUser(@Body() loginForm: loginFormDto) {
     return this.userService.loginUser(loginForm)
   }
 
   @Get('getUser/:id')
-  getUser(@Param('id') phoneNumber:any){
+  getUser(@Param('id') phoneNumber: any) {
 
     return this.userService.getUser(phoneNumber)
   }
 
   @Get('getUserUsingId/:id')
-  getUserUsingId(@Param('id') userId:any){
+  getUserUsingId(@Param('id') userId: any) {
     return this.userService.getUserUsingId(userId)
   }
 
   @Get('loadCategoriesAndSubCategories')
-    loadCategoriesAndSubCategories(){
-        return this.userService.loadCategoriesAndSubCategories()
-    }
+  loadCategoriesAndSubCategories() {
+    return this.userService.loadCategoriesAndSubCategories()
+  }
 
-    @Post('freelancerApply')
-    freelancerApply(@Body() freelancerApplyForm:freelancerApplyDto){
-      return this.userService.freelancerApply(freelancerApplyForm)
-      }
+  @Post('freelancerApply')
+  freelancerApply(@Body() freelancerApplyForm: freelancerApplyDto) {
+    return this.userService.freelancerApply(freelancerApplyForm)
+  }
+
+  @Post('addGig')
+  addGig(@Body() gigData: CreateUserDto) {
+    return this.userService.addGig(gigData)
+  }
+
+  @Get('getAllGigs/:id')
+  getAllGigs(@Param('id') id:string) {
+    return this.userService.getAllGigs(id)
+  }
 }
 
 

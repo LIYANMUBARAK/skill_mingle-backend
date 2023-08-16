@@ -8,6 +8,7 @@ import { JwtService } from '@nestjs/jwt';
 import { category } from 'src/schemas/categoryModel';
 import { subcategory } from 'src/schemas/subcategoryModel';
 import { freelancer } from 'src/schemas/freelancerModel';
+import { gig } from 'src/schemas/gigModel';
 
 const bcrypt = require('bcrypt')
 
@@ -19,6 +20,7 @@ export class UserService {
         @InjectModel('category') private readonly categoryModel: Model<category>,
         @InjectModel('subcategory') private readonly subcategoryModel: Model<subcategory>,
         @InjectModel('freelancer') private readonly freelancerModel: Model<freelancer>,
+        @InjectModel('gig') private readonly gigModel: Model<gig>,
         private jwtService: JwtService,
     ) { }
 
@@ -190,6 +192,40 @@ export class UserService {
         } catch (error) {
             console.log(error.message)
         }
+    }
+
+
+    async addGig(gigData){
+        const userObjectId = new Types.ObjectId(gigData.userId)
+
+        const gig =await new this.gigModel({
+            freelancerId:userObjectId,
+            title: gigData.title,
+            category: gigData.categorySelect,
+            subcategory: gigData.subCategorySelect,
+            basicPrice: gigData.basicPrice,
+            basicDeliveryTime: gigData.basicDeliveryTime,
+            basicRevisions: gigData.basicRevisions,
+            standardPrice: gigData.standardPrice,
+            standardDeliveryTime:gigData.standardDeliveryTime,
+            standardRevisions:gigData.standardRevisions,
+            premiumPrice:gigData.premiumPrice,
+            premiumRevisions:gigData.premiumDeliveryTime,
+            premiumDeliveryTime:gigData.premiumRevisions,
+            description:gigData.description,
+            video:gigData.video,
+            images:gigData.images,
+         
+        }).save();
+        return {gigSave:true}
+    }
+
+    async getAllGigs(freelancerId){
+       
+     const freelancerObjectId=new Types.ObjectId(freelancerId)
+     console.log(freelancerObjectId)
+     const gigData=await this.gigModel.find({freelancerId:freelancerObjectId})
+    return {gigData:gigData}                 
     }
 
 }

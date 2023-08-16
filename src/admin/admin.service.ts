@@ -8,6 +8,7 @@ import { categoryDto } from '../dto/categoryDto';
 import { subcategory } from '../schemas/subcategoryModel';
 import { user } from 'src/schemas/userModel';
 import { freelancer } from 'src/schemas/freelancerModel';
+import { gig } from 'src/schemas/gigModel';
 
 
 
@@ -21,7 +22,8 @@ export class AdminService {
         private jwtService: JwtService, @InjectModel('category') private readonly categoryModel: Model<category>,
         @InjectModel('subcategory') private readonly subcategoryModel: Model<subcategory>,
         @InjectModel('user') private readonly userModel: Model<user>,
-        @InjectModel('freelancer') private readonly freelancerModel: Model<freelancer>) { }
+        @InjectModel('freelancer') private readonly freelancerModel: Model<freelancer>,
+        @InjectModel('gig') private readonly gigModel: Model<gig>) { }
 
     async verifyLogin(loginForm) {
         try {
@@ -233,5 +235,10 @@ export class AdminService {
         await this.subcategoryModel.findOneAndUpdate({_id:subcategoryId},{name:newSubcategoryName})
         console.log(subcategoryId)
         return { editSubcategory:true }
+    }
+
+    async getAllGigs(){
+        const gigsData=await this.gigModel.find()
+        return {gigs:gigsData}
     }
 }

@@ -7,6 +7,7 @@ import { categorySchema } from '../schemas/categoryModel';
 import { subcategorySchema } from '../schemas/subcategoryModel';
 import { userSchema } from '../schemas/userModel';
 import { freelancerSchema } from '../schemas/freelancerModel';
+import { gigSchema } from '../schemas/gigModel';
 
 @Module({
   imports:[MongooseModule.forFeature([
@@ -22,6 +23,9 @@ import { freelancerSchema } from '../schemas/freelancerModel';
     },
     {
       name:'freelancer',schema:freelancerSchema
+    },
+    {
+      name:'gig',schema:gigSchema
     }
   ])],
   controllers: [AdminController],
