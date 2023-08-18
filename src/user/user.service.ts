@@ -44,7 +44,7 @@ export class UserService {
                         return { userNameExist: "User Name is already used" }
                     }
                     else {
-                        
+
                         const user = new this.userModel({
                             name: name,
                             userName: userName,
@@ -55,7 +55,7 @@ export class UserService {
                             country: country,
                             city: city,
                             isBlocked: false,
-                            dateOfJoin:Date.now()
+                            dateOfJoin: Date.now()
                         })
                         await user.save();
                         return { userSave: true }
@@ -150,28 +150,28 @@ export class UserService {
         }
     }
 
-    
-    async freelancerApply(freelancerApplyForm){
+
+    async freelancerApply(freelancerApplyForm) {
         try {
-            let personalWebsite =''
-            let instagram =''
-            let facebook =''
-            let twitter =''
-            const {userId,skills,languages,occupation,education,certification,description}=freelancerApplyForm
-            if(freelancerApplyForm.personalWebsite){
-             personalWebsite=freelancerApplyForm.personalWebsite
+            let personalWebsite = ''
+            let instagram = ''
+            let facebook = ''
+            let twitter = ''
+            const { userId, skills, languages, occupation, education, certification, description } = freelancerApplyForm
+            if (freelancerApplyForm.personalWebsite) {
+                personalWebsite = freelancerApplyForm.personalWebsite
             }
-            if(freelancerApplyForm.instagram){
-                const instagram=freelancerApplyForm.instagram
+            if (freelancerApplyForm.instagram) {
+                const instagram = freelancerApplyForm.instagram
             }
-            if(freelancerApplyForm.facebook){
-                const facebook=freelancerApplyForm.facebook
+            if (freelancerApplyForm.facebook) {
+                const facebook = freelancerApplyForm.facebook
             }
-            if(freelancerApplyForm.twitter){
-                const twitter=freelancerApplyForm.twitter
+            if (freelancerApplyForm.twitter) {
+                const twitter = freelancerApplyForm.twitter
             }
             const userObjectId = new Types.ObjectId(userId)
-            const freelancer =await new this.freelancerModel({
+            const freelancer = await new this.freelancerModel({
                 userId: userObjectId,
                 skills: skills,
                 languages: languages,
@@ -179,27 +179,27 @@ export class UserService {
                 education: education,
                 certification: certification,
                 description: description,
-                personalWebsite:personalWebsite,
-                instagram:instagram,
-                facebook:facebook,
-                twitter:twitter
+                personalWebsite: personalWebsite,
+                instagram: instagram,
+                facebook: facebook,
+                twitter: twitter
             }).save();
 
-            const freelancerId=freelancer._id
-            
-            await this.userModel.updateOne({_id:userId},{$set:{freelancerId:freelancerId,isFreelancer:false}})
-            return {freelancerApply:true}
+            const freelancerId = freelancer._id
+
+            await this.userModel.updateOne({ _id: userId }, { $set: { freelancerId: freelancerId, isFreelancer: false } })
+            return { freelancerApply: true }
         } catch (error) {
             console.log(error.message)
         }
     }
 
 
-    async addGig(gigData){
+    async addGig(gigData) {
         const userObjectId = new Types.ObjectId(gigData.userId)
 
-        const gig =await new this.gigModel({
-            freelancerId:userObjectId,
+        const gig = await new this.gigModel({
+            freelancerId: userObjectId,
             title: gigData.title,
             category: gigData.categorySelect,
             subcategory: gigData.subCategorySelect,
@@ -207,25 +207,54 @@ export class UserService {
             basicDeliveryTime: gigData.basicDeliveryTime,
             basicRevisions: gigData.basicRevisions,
             standardPrice: gigData.standardPrice,
-            standardDeliveryTime:gigData.standardDeliveryTime,
-            standardRevisions:gigData.standardRevisions,
-            premiumPrice:gigData.premiumPrice,
-            premiumRevisions:gigData.premiumDeliveryTime,
-            premiumDeliveryTime:gigData.premiumRevisions,
-            description:gigData.description,
-            video:gigData.video,
-            images:gigData.images,
-         
+            standardDeliveryTime: gigData.standardDeliveryTime,
+            standardRevisions: gigData.standardRevisions,
+            premiumPrice: gigData.premiumPrice,
+            premiumRevisions: gigData.premiumDeliveryTime,
+            premiumDeliveryTime: gigData.premiumRevisions,
+            description: gigData.description,
+            video: gigData.video,
+            images: gigData.images,
+
         }).save();
-        return {gigSave:true}
+        return { gigSave: true }
     }
 
-    async getAllGigs(freelancerId){
-       
-     const freelancerObjectId=new Types.ObjectId(freelancerId)
-     console.log(freelancerObjectId)
-     const gigData=await this.gigModel.find({freelancerId:freelancerObjectId})
-    return {gigData:gigData}                 
+    async getAllGigs(freelancerId) {
+
+        const freelancerObjectId = new Types.ObjectId(freelancerId)
+    
+        const gigData = await this.gigModel.find({ freelancerId: freelancerObjectId })
+        return { gigData: gigData }
     }
 
-}
+    async getAllCategories() {
+        try {
+            const categoryData = await this.categoryModel.find()
+            return {categoryData:categoryData}
+        } catch (error) {
+            console.log(error.message)
+        }
+    }
+
+    async getSubcategoriesOfCategory(categoryId:string){
+        try {
+            const categoryObjectId = new Types.ObjectId(categoryId)
+            const subcategoryData = await this.subcategoryModel.find({categoryId:categoryObjectId})
+           
+            return {subcategoryData:subcategoryData}
+        } catch (error) {
+            console.log(error.message)
+        }
+        }
+
+        async getGigs(){
+            try {
+                const gigsData = await this.gigModel.find()
+                return {gigsData:gigsData}
+            } catch (error) {
+                console.log(error.message)
+            }
+        }
+    }
+

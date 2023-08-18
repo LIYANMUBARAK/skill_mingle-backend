@@ -49,6 +49,24 @@ export class UserController {
   getAllGigs(@Param('id') id:string) {
     return this.userService.getAllGigs(id)
   }
+
+  @Get('getAllCategories')
+  getAllCategories() {
+    return this.userService.getAllCategories()
+  }
+
+
+  @Get('getSubcategoriesofCategory/:categoryId')
+  getSubcategoriesOfCategory(@Param('categoryId') categoryId:string) {
+    return this.userService.getSubcategoriesOfCategory(categoryId)
+  }
+
+
+  @Get('getGigs')
+  getGigs() {
+    return this.userService.getGigs()
+  }
+  
 }
 
 
