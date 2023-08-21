@@ -103,7 +103,7 @@ console.log(id)
         return this.adminService.getAllGigs()
     }
     
-
+   
   
 
 }

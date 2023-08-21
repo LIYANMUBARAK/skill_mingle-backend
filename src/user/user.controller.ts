@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Post } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post, Query } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto } from '../dto/userDto';
 import { loginFormDto } from '../dto/loginFormDto';
@@ -67,6 +67,12 @@ export class UserController {
     return this.userService.getGigs()
   }
   
+
+  @Delete('deleteGig')
+  deleteGig(@Query('id') id: string) {
+      console.log(id)
+      return this.userService.deleteGig(id)
+  }
 }
 
 

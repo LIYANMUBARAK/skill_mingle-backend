@@ -250,11 +250,26 @@ export class UserService {
 
         async getGigs(){
             try {
-                const gigsData = await this.gigModel.find()
+                const gigsData = await this.gigModel.find().populate('freelancerId')
                 return {gigsData:gigsData}
             } catch (error) {
                 console.log(error.message)
             }
+        }
+
+        async deleteGig(id) {
+            try {
+    
+                const gigId = new Types.ObjectId(id)
+                console.log(gigId)
+                await this.gigModel.deleteOne({ _id: gigId })
+         
+                return {deleteGig:true}
+    
+            } catch (error) {
+                console.log(error.message)
+            }
+    
         }
     }
 

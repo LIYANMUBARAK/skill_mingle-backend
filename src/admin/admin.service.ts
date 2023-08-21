@@ -241,4 +241,6 @@ export class AdminService {
         const gigsData=await this.gigModel.find()
         return {gigs:gigsData}
     }
+
+   
 }

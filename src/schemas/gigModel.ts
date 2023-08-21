@@ -5,7 +5,7 @@ import { Document, ObjectId, Types } from 'mongoose';
 export class gig extends Document {
 
 
-    @Prop({type:Types.ObjectId})
+    @Prop({type:Types.ObjectId,ref:'user'})
     freelancerId:ObjectId
 
     @Prop()
