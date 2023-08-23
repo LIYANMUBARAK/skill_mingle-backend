@@ -261,7 +261,7 @@ export class UserService {
             try {
     
                 const gigId = new Types.ObjectId(id)
-                console.log(gigId)
+                
                 await this.gigModel.deleteOne({ _id: gigId })
          
                 return {deleteGig:true}
@@ -270,6 +270,13 @@ export class UserService {
                 console.log(error.message)
             }
     
+        }
+
+       async getGig(id:string){
+            const gigId=new Types.ObjectId(id)
+            console.log(gigId)
+            const gigData =await this.gigModel.findOne({_id:gigId}).populate('freelancerId')
+            return {gigData:gigData}
         }
     }
 

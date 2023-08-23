@@ -73,6 +73,12 @@ export class UserController {
       console.log(id)
       return this.userService.deleteGig(id)
   }
+
+  @Get('getGig/:id')
+  getGig(@Param('id') id:string){
+    console.log(id)
+    return this.userService.getGig(id)
+  }
 }
 
 
