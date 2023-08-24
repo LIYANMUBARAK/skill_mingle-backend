@@ -18,7 +18,7 @@ export class gig extends Document {
     subcategory: String
 
     @Prop()
-    basicPrice: String[]
+    basicPrice: String
 
     @Prop()
     basicDeliveryTime: []
