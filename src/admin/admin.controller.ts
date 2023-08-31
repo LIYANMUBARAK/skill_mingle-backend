@@ -73,8 +73,7 @@ export class AdminController {
 
     @Patch('freelancerReject')
     freelancerReject(@Body() id: Object) {
-console.log("hey")
-console.log(id)
+
         return this.adminService.freelanceReject(id)
     }
 

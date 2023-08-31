@@ -9,6 +9,10 @@ import { category } from 'src/schemas/categoryModel';
 import { subcategory } from 'src/schemas/subcategoryModel';
 import { freelancer } from 'src/schemas/freelancerModel';
 import { gig } from 'src/schemas/gigModel';
+import { MailerModule, MailerService } from '@nestjs-modules/mailer'
+import { join } from 'path';
+import { readFileSync } from 'fs';
+import handlebars from 'handlebars';
 
 const bcrypt = require('bcrypt')
 
@@ -22,6 +26,7 @@ export class UserService {
         @InjectModel('freelancer') private readonly freelancerModel: Model<freelancer>,
         @InjectModel('gig') private readonly gigModel: Model<gig>,
         private jwtService: JwtService,
+        private mailerService: MailerService,
     ) { }
 
     async registerUser(registerForm: CreateUserDto): Promise<any> {
@@ -223,7 +228,7 @@ export class UserService {
     async getAllGigs(freelancerId) {
 
         const freelancerObjectId = new Types.ObjectId(freelancerId)
-    
+
         const gigData = await this.gigModel.find({ freelancerId: freelancerObjectId })
         return { gigData: gigData }
     }
@@ -231,52 +236,101 @@ export class UserService {
     async getAllCategories() {
         try {
             const categoryData = await this.categoryModel.find()
-            return {categoryData:categoryData}
+            return { categoryData: categoryData }
         } catch (error) {
             console.log(error.message)
         }
     }
 
-    async getSubcategoriesOfCategory(categoryId:string){
+    async getSubcategoriesOfCategory(categoryId: string) {
         try {
             const categoryObjectId = new Types.ObjectId(categoryId)
-            const subcategoryData = await this.subcategoryModel.find({categoryId:categoryObjectId})
-           
-            return {subcategoryData:subcategoryData}
+            const subcategoryData = await this.subcategoryModel.find({ categoryId: categoryObjectId })
+
+            return { subcategoryData: subcategoryData }
         } catch (error) {
             console.log(error.message)
         }
-        }
+    }
 
-        async getGigs(){
-            try {
-                const gigsData = await this.gigModel.find().populate('freelancerId')
-                return {gigsData:gigsData}
-            } catch (error) {
-                console.log(error.message)
-            }
-        }
-
-        async deleteGig(id) {
-            try {
-    
-                const gigId = new Types.ObjectId(id)
-                
-                await this.gigModel.deleteOne({ _id: gigId })
-         
-                return {deleteGig:true}
-    
-            } catch (error) {
-                console.log(error.message)
-            }
-    
-        }
-
-       async getGig(id:string){
-            const gigId=new Types.ObjectId(id)
-            console.log(gigId)
-            const gigData =await this.gigModel.findOne({_id:gigId}).populate('freelancerId')
-            return {gigData:gigData}
+    async getGigs() {
+        try {
+            const gigsData = await this.gigModel.find().populate('freelancerId')
+            return { gigsData: gigsData }
+        } catch (error) {
+            console.log(error.message)
         }
     }
+
+    async deleteGig(id) {
+        try {
+
+            const gigId = new Types.ObjectId(id)
+
+            await this.gigModel.deleteOne({ _id: gigId })
+
+            return { deleteGig: true }
+
+        } catch (error) {
+            console.log(error.message)
+        }
+
+    }
+
+    async getGig(id: string) {
+        const gigId = new Types.ObjectId(id)
+
+        const gigData = await this.gigModel.findOne({ _id: gigId }).populate('freelancerId')
+        return { gigData: gigData }
+    }
+
+
+    async emailExist(email: string) {
+
+        const userData = await this.userModel.findOne({ email: email })
+
+        if (userData) {
+            return { emailExist: true }
+        }
+        else {
+            return { emailExist: false }
+        }
+    }
+
+    async editUser(formData) {
+
+        const nameExist = await this.userModel.findOne({ name: formData.name })
+        const userNameExist = await this.userModel.findOne({ userName: formData.userName })
+
+
+        const name = formData.name
+        const userName = formData.userName
+        const city = formData.city
+        await this.userModel.findOneAndUpdate({ name: name }, { $set: { name: name, userName: userName, city: city } })
+        return { userEdit: true }
+    }
+
+    async sendPasswordResetEmail(email: string) {
+        console.log(email)
+        const filePath = join(__dirname, '../emails/passwordReset.html');
+        const htmlTemplate = readFileSync(filePath, 'utf8');
+
+        const compiledTemplate = handlebars.compile(htmlTemplate);
+        const token = await this.jwtService.signAsync({ userEmail: email });
+        const userData = await this.userModel.findOne({ email: email })
+        console.log(email)
+        const dynamicData = {
+            name: userData.name,
+            resetLink: `${process.env.FRONTEND_URL}/resetPassword/${token}`
+        };
+        const htmlContent = compiledTemplate(dynamicData);
+        this.mailerService.sendMail({
+            to: email,
+            from: 'skillmingle69@gmail.com',
+            subject: 'Password Reset',
+            text: 'welcome',
+            html: htmlContent
+        })
+    }
+}
 

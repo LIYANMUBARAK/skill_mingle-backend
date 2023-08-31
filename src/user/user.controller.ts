@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, Post, Query } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Patch, Post, Query } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto } from '../dto/userDto';
 import { loginFormDto } from '../dto/loginFormDto';
@@ -78,6 +78,25 @@ export class UserController {
   getGig(@Param('id') id:string){
     console.log(id)
     return this.userService.getGig(id)
+  }
+
+
+  @Get('emailExist/:email')
+  emailExist(@Param('email') email:string){
+    console.log(email)
+    return this.userService.emailExist(email)
+  }
+
+  @Patch('editUser')
+  freelancerReject(@Body() formData: Object) {
+
+      return this.userService.editUser(formData)
+  }
+
+  @Get('sendPasswordResetEmail/:email')
+  sendPasswordResetEmail(@Param('email') email:string){
+    console.log(email)
+    return this.userService.sendPasswordResetEmail(email)
   }
 }
 
