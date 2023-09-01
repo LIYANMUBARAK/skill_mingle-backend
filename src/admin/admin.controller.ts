@@ -34,6 +34,7 @@ export class AdminController {
 
     @Patch('editCategory')
     editCategory(@Body() categoryData: editCategoryDto) {
+        console.log(categoryData)
         return this.adminService.editCategory(categoryData)
     }
 

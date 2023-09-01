@@ -74,6 +74,8 @@ export class AdminService {
     async editCategory(categoryData) {
         try {
             const { newCategoryName, id } = categoryData
+            console.log(newCategoryName)
+            console.log(id)
 
             const categoryExist = await this.categoryModel.findOne({ name: newCategoryName })
             if (categoryExist) {

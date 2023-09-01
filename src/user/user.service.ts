@@ -229,7 +229,16 @@ export class UserService {
 
         const freelancerObjectId = new Types.ObjectId(freelancerId)
 
-        const gigData = await this.gigModel.find({ freelancerId: freelancerObjectId })
+        const gigData = await this.gigModel.find({ freelancerId: freelancerObjectId }) .populate({
+            path: 'category',
+            model: 'category',
+                     })
+          .populate({
+            path: 'subcategory',
+            model: 'subcategory',
+            
+          })
+        console.log(gigData)
         return { gigData: gigData }
     }
 
