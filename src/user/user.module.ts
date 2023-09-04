@@ -7,6 +7,8 @@ import { category, categorySchema } from '../schemas/categoryModel';
 import { subcategorySchema } from '../schemas/subcategoryModel';
 import { freelancerSchema } from '../schemas/freelancerModel';
 import { gigSchema } from '../schemas/gigModel';
+import { ConnectionSchema } from '../schemas/chat.connection';
+import { ChatSchema } from '../schemas/chat.schema';
 
 @Module({
   imports:[MongooseModule.forFeature([
@@ -14,7 +16,9 @@ import { gigSchema } from '../schemas/gigModel';
     {name:'category',schema:categorySchema},
     {name:'subcategory',schema:subcategorySchema},
     {name:'freelancer',schema:freelancerSchema},
-    {name:'gig',schema:gigSchema}
+    {name:'gig',schema:gigSchema},
+    {name:'connection',schema:ConnectionSchema},
+    {name:'chat',schema:ChatSchema}
   ])],
   controllers:[UserController],
   providers:[UserService],

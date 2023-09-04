@@ -8,6 +8,8 @@ import { JwtService } from '@nestjs/jwt';
 import { category } from 'src/schemas/categoryModel';
 import { subcategory } from 'src/schemas/subcategoryModel';
 import { freelancer } from 'src/schemas/freelancerModel';
+import { ConnectionModel } from 'src/schemas/chat.connection';
+import { ChatModel } from 'src/schemas/chat.schema';
 import { gig } from 'src/schemas/gigModel';
 import { MailerModule, MailerService } from '@nestjs-modules/mailer'
 import { join } from 'path';
@@ -25,6 +27,8 @@ export class UserService {
         @InjectModel('subcategory') private readonly subcategoryModel: Model<subcategory>,
         @InjectModel('freelancer') private readonly freelancerModel: Model<freelancer>,
         @InjectModel('gig') private readonly gigModel: Model<gig>,
+        @InjectModel('connection')private readonly connectionModel:Model<ConnectionModel>,
+        @InjectModel('chat')private readonly chatModel:Model<ChatModel>,
         private jwtService: JwtService,
         private mailerService: MailerService,
     ) { }
@@ -340,6 +344,76 @@ export class UserService {
             text: 'welcome',
             html: htmlContent
         })
+    }
+
+    async chatConnect(ids){
+        const {freelancerId,userId}=ids
+        const freelancerObjectId=new Types.ObjectId(freelancerId)
+        const userObjectId=new Types.ObjectId(userId)
+            const details = await this.connectionModel.findOne({
+                'connections.user':userObjectId,
+                'connections.freelancer':freelancerObjectId
+            })
+        
+            if(!details){
+                const newConnection = new this.connectionModel({
+                    connections:{
+                        user:userObjectId,
+                        freelancer:freelancerObjectId
+                    }
+                })
+                await newConnection.save()
+                const connectionId = newConnection._id
+                console.log("connection id"+connectionId)
+                const userChat = {
+                    connection : connectionId,
+                    sender:userObjectId,
+                    reciever:freelancerObjectId
+                }
+                this.intialUser(userChat)
+                const freelancerChat = {
+                    connection:connectionId,
+                    sender:freelancerObjectId,
+                    reciever:userObjectId
+                }
+                this.intialFreelancer(freelancerChat)
+                
+            }
+            return {chatConnect:true}
+    }
+
+    async intialUser(userChat){
+
+        const newChat = new this.chatModel({
+            connection:userChat.connection,
+            sender:userChat.sender,
+            reciever:userChat.reciever,
+            message:''
+        })
+        await newChat.save()
+       
+    }
+
+    async intialFreelancer(freelancerChat){
+        const newChat = new this.chatModel({
+            connection:freelancerChat.connection,
+            sender:freelancerChat.sender,
+            reciever:freelancerChat.reciever,
+            message:''
+        })
+        await newChat.save()
+    }
+
+    async getChatforUser(freelancerAndUserId){
+        const {freelancerId,userId}=freelancerAndUserId
+        const freelancerObjectId = new Types.ObjectId(freelancerId)
+        const userObjectId = new Types.ObjectId(userId)
+        let chat =await this.chatModel.find({sender:userObjectId,reciever:freelancerObjectId})
+        const connection = chat[0].connection
+         chat = await this.chatModel.find({connection:connection})
+         console.log(chat)
+
+        return {chat:chat}
     }
 }
 

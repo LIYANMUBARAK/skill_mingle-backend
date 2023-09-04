@@ -98,6 +98,18 @@ export class UserController {
     console.log(email)
     return this.userService.sendPasswordResetEmail(email)
   }
+
+  @Post('chatConnect')
+  chatConnect(@Body() ids:Object){
+   return this.userService.chatConnect(ids)
+  }
+
+  @Post('getChatforUser')
+  getChatforUser(@Body() freelancerAndUserId:Object){
+   return this.userService.getChatforUser(freelancerAndUserId)
+  }
+
+
 }
 
 
