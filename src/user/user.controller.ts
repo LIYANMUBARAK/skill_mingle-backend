@@ -110,6 +110,25 @@ export class UserController {
   }
 
 
+  @Post('chatSend')
+  chatSend(@Body() chat:Object){
+    console.log(chat)
+   return this.userService.chatSend(chat)
+  }
+
+
+  @Get('getConnections/:userId')
+  getConnections(@Param('userId') userId:string){
+    console.log(userId)
+    return this.userService.getConnections(userId)
+  }
+
+  @Get('getConnectionsForFreelancer/:freelancerId')
+  getConnectionsForFreelancer(@Param('freelancerId') freelancerId:string){
+      console.log(freelancerId)
+      return this.userService.getConnectionsForFreelancer(freelancerId)
+    }
+
 }
 
 

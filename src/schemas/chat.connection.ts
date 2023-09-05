@@ -12,7 +12,7 @@ export class Connection{
     @Prop({
         type:{
             user:{type:mongoose.Types.ObjectId,ref:'user'},
-            freelancer:{type:mongoose.Types.ObjectId,ref:'freelancer'}
+            freelancer:{type:mongoose.Types.ObjectId,ref:'user'}
         }
     })
     connections:{

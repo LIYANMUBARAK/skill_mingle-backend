@@ -5,6 +5,7 @@ import { categoryDto } from '../dto/categoryDto';
 import { subcategoryDto } from '../dto/subCategoryDto';
 import { editCategoryDto } from '../dto/editCategory';
 import { userIdDto } from '../dto/userId';
+import { freelancer } from 'src/schemas/freelancerModel';
 
 @Controller('admin')
 export class AdminController {
@@ -103,7 +104,7 @@ export class AdminController {
         return this.adminService.getAllGigs()
     }
     
- 
+    
   
 
 }

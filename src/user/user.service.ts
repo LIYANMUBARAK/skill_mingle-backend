@@ -411,9 +411,44 @@ export class UserService {
         let chat =await this.chatModel.find({sender:userObjectId,reciever:freelancerObjectId})
         const connection = chat[0].connection
          chat = await this.chatModel.find({connection:connection})
-         console.log(chat)
+         
 
         return {chat:chat}
+    }
+
+    async chatSend(chat)
+    {  
+        console.log(chat)
+        const {freelancerId,userId,chatMessage}=chat
+        const freelancerObjectId = new Types.ObjectId(freelancerId)
+        const userObjectId = new Types.ObjectId(userId)
+        let chatData =await this.chatModel.find({sender:userObjectId,reciever:freelancerObjectId})
+        const connection = chatData[0].connection
+   
+        const newChat = new this.chatModel({
+        connection:connection,
+        sender:userObjectId,
+        reciever:freelancerObjectId,
+        message:chatMessage
+    })
+    await newChat.save()
+        
+        return {chatSend:true}
+    }
+
+    async getConnections(userId){
+        const userObjectId = new Types.ObjectId(userId)
+        
+        const allConnections=await this.connectionModel.find({'connections.user':userObjectId}).populate('connections.freelancer')
+     
+        return {connections:allConnections}
+    }
+
+    async getConnectionsForFreelancer(freelancerId){
+        const freelancerObjectId = new Types.ObjectId(freelancerId)
+        const allConnections = await this.connectionModel.find({'connections.freelancer':freelancerObjectId}).populate('connections.user')
+        console.log(allConnections)
+        return {connections:allConnections}
     }
 }
 
