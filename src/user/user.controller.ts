@@ -129,6 +129,21 @@ export class UserController {
       return this.userService.getConnectionsForFreelancer(freelancerId)
     }
 
+    @Get('getGigOfCategory/:categoryName')
+    
+    getGigOfCategory(@Param('categoryName') categoryName:string){
+        console.log(categoryName)
+        return this.userService.getGigOfCategory(categoryName)
+      }
+
+
+      @Post('orderSave')
+      orderSave(@Body() orderData:Object){
+        console.log(orderData)
+       return this.userService.orderSave(orderData)
+      }
+   
+
 }
 
 

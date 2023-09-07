@@ -9,6 +9,7 @@ import { freelancerSchema } from '../schemas/freelancerModel';
 import { gigSchema } from '../schemas/gigModel';
 import { ConnectionSchema } from '../schemas/chat.connection';
 import { ChatSchema } from '../schemas/chat.schema';
+import { orderSchema } from '../schemas/orderModel';
 
 @Module({
   imports:[MongooseModule.forFeature([
@@ -18,7 +19,8 @@ import { ChatSchema } from '../schemas/chat.schema';
     {name:'freelancer',schema:freelancerSchema},
     {name:'gig',schema:gigSchema},
     {name:'connection',schema:ConnectionSchema},
-    {name:'chat',schema:ChatSchema}
+    {name:'chat',schema:ChatSchema},
+    {name:'order',schema:orderSchema}
   ])],
   controllers:[UserController],
   providers:[UserService],

@@ -7,6 +7,7 @@ import { AdminModule } from './admin/admin.module';
 import { JwtModule } from '@nestjs/jwt';
 import { AuthMiddleware } from './helper/middleware/auth.middleware';
 import { MailerModule } from '@nestjs-modules/mailer';
+import { ChatModule } from './chat/chat.module';
 import * as dotenv from 'dotenv'
  dotenv.config()
 @Module({
@@ -30,7 +31,8 @@ import * as dotenv from 'dotenv'
         }
 
       }
-    })
+    }),
+    ChatModule
   ],
   controllers: [AppController],
   providers: [AppService],

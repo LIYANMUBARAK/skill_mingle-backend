@@ -10,6 +10,7 @@ import { subcategory } from 'src/schemas/subcategoryModel';
 import { freelancer } from 'src/schemas/freelancerModel';
 import { ConnectionModel } from 'src/schemas/chat.connection';
 import { ChatModel } from 'src/schemas/chat.schema';
+import { order } from 'src/schemas/orderModel';
 import { gig } from 'src/schemas/gigModel';
 import { MailerModule, MailerService } from '@nestjs-modules/mailer'
 import { join } from 'path';
@@ -29,6 +30,7 @@ export class UserService {
         @InjectModel('gig') private readonly gigModel: Model<gig>,
         @InjectModel('connection')private readonly connectionModel:Model<ConnectionModel>,
         @InjectModel('chat')private readonly chatModel:Model<ChatModel>,
+        @InjectModel('order')private readonly orderModel:Model<order>,
         private jwtService: JwtService,
         private mailerService: MailerService,
     ) { }
@@ -275,6 +277,22 @@ export class UserService {
         }
     }
 
+    async    getGigOfCategory(categoryName) {
+        try {
+            const categoryData=await this.categoryModel.findOne({name:categoryName})
+            const categoryId=categoryData._id.toString()
+            console.log(categoryId)
+            const gigsData = await this.gigModel.find({category:categoryId}).populate('freelancerId')
+            console.log(gigsData)
+            return { gigsData: gigsData }
+        } catch (error) {
+            console.log(error.message)
+        }
+    }
+
+
+ 
+
     async deleteGig(id) {
         try {
 
@@ -388,7 +406,7 @@ export class UserService {
             connection:userChat.connection,
             sender:userChat.sender,
             reciever:userChat.reciever,
-            message:''
+           
         })
         await newChat.save()
        
@@ -399,7 +417,7 @@ export class UserService {
             connection:freelancerChat.connection,
             sender:freelancerChat.sender,
             reciever:freelancerChat.reciever,
-            message:''
+          
         })
         await newChat.save()
     }
@@ -449,6 +467,20 @@ export class UserService {
         const allConnections = await this.connectionModel.find({'connections.freelancer':freelancerObjectId}).populate('connections.user')
         console.log(allConnections)
         return {connections:allConnections}
+    }
+
+    async orderSave(orderData){
+        const {orderToken,gigId,freelancerId,userId}=orderData
+        const orderSave = new this.orderModel({
+            orderToken:orderToken,
+            gigId:gigId,
+            freelancer:freelancerId,
+            user:userId,
+            
+        })
+        console.log(orderSave)
+        await orderSave.save()
+        return {orderSave:true}
     }
 }
 
