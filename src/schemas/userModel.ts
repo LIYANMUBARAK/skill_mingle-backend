@@ -21,7 +21,7 @@ export class user extends Document{
     @Prop()
    gender:String
 
-   @Prop()
+   @Prop({default:0})
    wallet:Number
 
    @Prop()

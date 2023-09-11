@@ -11,10 +11,10 @@ export class gig extends Document {
     @Prop()
     title: string
 
-    @Prop()
+    @Prop({type:Types.ObjectId,ref:'category'})
     category: string
 
-    @Prop()
+    @Prop({type:Types.ObjectId,ref:'subcategory'})
     subcategory: String
 
     @Prop()

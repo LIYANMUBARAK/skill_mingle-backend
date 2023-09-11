@@ -89,7 +89,7 @@ export class UserController {
 
   @Patch('editUser')
   freelancerReject(@Body() formData: Object) {
-
+    
       return this.userService.editUser(formData)
   }
 
@@ -142,8 +142,23 @@ export class UserController {
         console.log(orderData)
        return this.userService.orderSave(orderData)
       }
-   
 
+      @Get('getSubcategories/:categoryName')
+    
+      getSubcategories(@Param('categoryName') categoryName:string){
+        
+        return this.userService.getSubcategories(categoryName)
+      }
+
+      @Get('getAllOrdersForUser/:userId')
+      getAllOrdersForUser(@Param('userId') userId:string){
+        
+        return this.userService.getAllOrdersForUser(userId)
+      }
+
+      
+   
+      
 }
 
 

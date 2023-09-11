@@ -105,6 +105,9 @@ export class AdminController {
     }
     
     
-  
+    @Get('getAllOrders')
+    getAllOrders() { 
+        return this.adminService.getAllOrders()
+    }
 
 }

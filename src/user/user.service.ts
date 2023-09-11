@@ -281,9 +281,9 @@ export class UserService {
         try {
             const categoryData=await this.categoryModel.findOne({name:categoryName})
             const categoryId=categoryData._id.toString()
-            console.log(categoryId)
-            const gigsData = await this.gigModel.find({category:categoryId}).populate('freelancerId')
-            console.log(gigsData)
+            
+            const gigsData = await this.gigModel.find({category:categoryId}).populate('freelancerId').populate('category').populate('subcategory')
+           
             return { gigsData: gigsData }
         } catch (error) {
             console.log(error.message)
@@ -329,7 +329,7 @@ export class UserService {
     }
 
     async editUser(formData) {
-
+        console.log(formData)
         const nameExist = await this.userModel.findOne({ name: formData.name })
         const userNameExist = await this.userModel.findOne({ userName: formData.userName })
 
@@ -337,7 +337,7 @@ export class UserService {
         const name = formData.name
         const userName = formData.userName
         const city = formData.city
-        await this.userModel.findOneAndUpdate({ name: name }, { $set: { name: name, userName: userName, city: city } })
+        await this.userModel.findOneAndUpdate({ name: name }, { $set: { name: name, userName: userName, city: city ,profilePic:formData.profilePic} })
         return { userEdit: true }
     }
 
@@ -470,17 +470,54 @@ export class UserService {
     }
 
     async orderSave(orderData){
-        const {orderToken,gigId,freelancerId,userId}=orderData
+        const {orderToken,gigId,freelancerId,userId,plan,price,deliveryTime,revision}=orderData
+        const freelancerObjectId = new Types.ObjectId(freelancerId)
+        const userObjectId = new Types.ObjectId(userId)
         const orderSave = new this.orderModel({
             orderToken:orderToken,
             gigId:gigId,
-            freelancer:freelancerId,
-            user:userId,
-            
+            freelancer:freelancerObjectId,
+            user:userObjectId,
+            plan:plan,
+            price:price,
+            deliveryTime:deliveryTime,
+            revision:revision
         })
-        console.log(orderSave)
+      
         await orderSave.save()
         return {orderSave:true}
     }
+
+   async getSubcategories(categoryName){
+    {
+        try {
+           const category=await this.categoryModel.findOne({name:categoryName})
+
+            const subcategoryData = await this.subcategoryModel.find({categoryId:category._id})
+            
+           
+            return { subcategoryData: subcategoryData }
+        } catch (error) {
+            console.log(error.message)
+        }
+    }
+    }
+
+
+
+    async getAllOrdersForUser(userId){
+        try{
+            console.log(userId)
+            const userObjectId = new Types.ObjectId(userId)
+            const orderData = await this.orderModel.find({user:userObjectId}).populate('freelancer').populate('gigId').populate('user')
+            return orderData
+        }
+        catch(error){
+            console.log(error.message)
+        }
+    }
+
+
+   
 }
 

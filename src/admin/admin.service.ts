@@ -9,7 +9,7 @@ import { subcategory } from '../schemas/subcategoryModel';
 import { user } from 'src/schemas/userModel';
 import { freelancer } from 'src/schemas/freelancerModel';
 import { gig } from 'src/schemas/gigModel';
-
+import { order } from 'src/schemas/orderModel';
 
 
 const bcrypt = require('bcrypt')
@@ -23,7 +23,8 @@ export class AdminService {
         @InjectModel('subcategory') private readonly subcategoryModel: Model<subcategory>,
         @InjectModel('user') private readonly userModel: Model<user>,
         @InjectModel('freelancer') private readonly freelancerModel: Model<freelancer>,
-        @InjectModel('gig') private readonly gigModel: Model<gig>) { }
+        @InjectModel('gig') private readonly gigModel: Model<gig>,
+        @InjectModel('order')private readonly orderModel:Model<order>,) { }
 
     async verifyLogin(loginForm) {
         try {
@@ -245,7 +246,17 @@ export class AdminService {
     }
 
     
-
+    async getAllOrders(){
+        try{
+            
+          
+            const orderData = await this.orderModel.find().populate('freelancer').populate('gigId').populate('user')
+            return orderData
+        }
+        catch(error){
+            console.log(error.message)
+        }
+    }
 
    
 }

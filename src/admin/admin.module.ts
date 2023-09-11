@@ -8,6 +8,7 @@ import { subcategorySchema } from '../schemas/subcategoryModel';
 import { userSchema } from '../schemas/userModel';
 import { freelancerSchema } from '../schemas/freelancerModel';
 import { gigSchema } from '../schemas/gigModel';
+import { orderSchema } from '../schemas/orderModel';
 
 @Module({
   imports:[MongooseModule.forFeature([
@@ -26,7 +27,8 @@ import { gigSchema } from '../schemas/gigModel';
     },
     {
       name:'gig',schema:gigSchema
-    }
+    },
+    {name:'order',schema:orderSchema},
   ])],
   controllers: [AdminController],
   providers: [AdminService]
