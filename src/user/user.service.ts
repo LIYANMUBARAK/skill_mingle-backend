@@ -16,6 +16,7 @@ import { MailerModule, MailerService } from '@nestjs-modules/mailer'
 import { join } from 'path';
 import { readFileSync } from 'fs';
 import handlebars from 'handlebars';
+import { workDto } from 'src/dto/workDto';
 
 const bcrypt = require('bcrypt')
 
@@ -518,6 +519,56 @@ export class UserService {
     }
 
 
+    async  getAllOrdersForFreelancer(freelancerId){
+        try{
+            console.log(freelancerId)
+            const freelancerObjectId = new Types.ObjectId(freelancerId)
+            const orderData = await this.orderModel.find({freelancer:freelancerObjectId}).populate('freelancer').populate('gigId').populate('user')
+            return orderData
+        }
+        catch(error){
+            console.log(error.message)
+        }
+    }
+
+
+    async  getOrderById(orderId){
+        try{
+            console.log(orderId)
+            const orderObjectId = new Types.ObjectId(orderId)
+            const orderData = await this.orderModel.findOne({_id:orderObjectId}).populate('freelancer').populate('gigId').populate('user')
+            return orderData
+        }
+        catch(error){
+            console.log(error.message)
+        }
+    }
+
+    
+   async sendWork(workData:workDto){
+    try {
+         const {files,description,gigId}=workData
+         console.log(workData.files)
+         const gigObjectId= new Types.ObjectId(gigId)
+         await this.orderModel.updateOne({_id:gigObjectId},
+            {$push:{
+                revisionData:{
+                    revisionFiles:files,
+                    revisionDescription:description,
+                    date:Date.now()
+                }
+            }},
+          )
+          await this.orderModel.updateOne({_id:gigId},  {
+            $inc:{
+                revisionCount:1
+            }
+        })
+    } catch (error) {
+        console.log(error.message)
+    }
+   }
+   
    
 }
 

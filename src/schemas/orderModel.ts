@@ -37,7 +37,16 @@ export class order extends Document{
    deliveryTime:string
 
    @Prop()
+
    revision:string
+
+   @Prop({})
+  revisionData:{
+      revisionFiles:Array<string>
+      revisionDescription:string
+      userNote:string
+      date:Date
+  }[]
 
    
 }

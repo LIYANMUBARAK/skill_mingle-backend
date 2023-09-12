@@ -3,6 +3,7 @@ import { UserService } from './user.service';
 import { CreateUserDto } from '../dto/userDto';
 import { loginFormDto } from '../dto/loginFormDto';
 import { userIdDto } from '../dto/userId';
+import { workDto } from '../dto/workDto';
 import { freelancerApplyDto } from '../dto/freelancerDto'
 
 @Controller('user')
@@ -156,7 +157,23 @@ export class UserController {
         return this.userService.getAllOrdersForUser(userId)
       }
 
-      
+      @Get('getAllOrdersForFreelancer/:freelancerId')
+      getAllOrdersForFreelancer(@Param('freelancerId') freelancerId:string){
+        
+        return this.userService.getAllOrdersForFreelancer(freelancerId)
+      }
+
+      @Get('getOrderById/:orderId')
+      getOrderById(@Param('orderId') orderId:string){
+        
+        return this.userService.getOrderById(orderId)
+      }
+
+
+  @Post('sendWork')
+  sendWork(@Body() workDetails:workDto ) {
+    return this.userService.sendWork(workDetails)
+  }
    
       
 }
