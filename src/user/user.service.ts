@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common'
+import { ConsoleLogger, Injectable } from '@nestjs/common'
 import { InjectModel } from '@nestjs/mongoose';
 import { Model, Types } from 'mongoose';
 import { CreateUserDto } from 'src/dto/userDto';
@@ -17,6 +17,7 @@ import { join } from 'path';
 import { readFileSync } from 'fs';
 import handlebars from 'handlebars';
 import { workDto } from 'src/dto/workDto';
+const { v4: uuidv4 } = require('uuid');
 
 const bcrypt = require('bcrypt')
 
@@ -550,9 +551,14 @@ export class UserService {
          const {files,description,gigId}=workData
          console.log(workData.files)
          const gigObjectId= new Types.ObjectId(gigId)
+         const uniqueId = uuidv4(); // generating new id
+
+         // Set the generated ID to the document
+   
          await this.orderModel.updateOne({_id:gigObjectId},
             {$push:{
                 revisionData:{
+                    _id:uniqueId,
                     revisionFiles:files,
                     revisionDescription:description,
                     date:Date.now()
@@ -568,7 +574,55 @@ export class UserService {
         console.log(error.message)
     }
    }
-   
+
+
+  async sendRevision(workDetails){
+    try {
+        console.log(workDetails)
+        const {orderId,revisionId,userRecommendations}=workDetails
+      const orderObjectId=new Types.ObjectId(orderId)
+      
+        await this.orderModel.updateOne({_id:orderObjectId , "revisionData._id":revisionId},{$set:{"revisionData.$.userNote":userRecommendations}})
+       
+        const orderData= await this.orderModel.findOne({_id:orderId})
+        
+    } catch (error) {
+        console.log(error.message)
+    }
+   }
+
+   async completeOrder(orderId){
+    try {
+        const orderObjectId = new Types.ObjectId(orderId.orderId)
+        await this.orderModel.updateOne({_id:orderObjectId},{$set:{completed:true}})
+    } catch (error) {
+        console.log(error.message)
+    }
+   }
+
+   async addReview(reviewDetails){
+    try {
+        console.log(reviewDetails)
+    const gigObjectId = new Types.ObjectId(reviewDetails.gigId._id)
+    const orderObjectId = new Types.ObjectId(reviewDetails.orderId)
+    const userObjectId = new Types.ObjectId(reviewDetails.userId)
+      
+    await this.gigModel.updateOne({_id:gigObjectId},
+        {$push:{
+            reviews:{
+                rating:reviewDetails.rating,
+                message:reviewDetails.reviewMesssage,
+                gigId:gigObjectId,
+                userId:userObjectId,
+                orderId:orderObjectId,
+                date:Date.now()
+            }
+        }})
+      
+    } catch (error) {
+        console.log(error.message)
+    }
+   }
    
 }
 

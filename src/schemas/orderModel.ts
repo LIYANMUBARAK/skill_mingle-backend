@@ -38,7 +38,7 @@ export class order extends Document{
 
    @Prop()
 
-   revision:string
+   revision:number
 
    @Prop({})
   revisionData:{

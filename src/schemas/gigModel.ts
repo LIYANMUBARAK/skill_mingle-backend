@@ -55,7 +55,14 @@ export class gig extends Document {
     @Prop()
     images: String[]
 
-
+    @Prop({})
+    reviews:{
+       rating:number
+        message:string
+        userId:string
+        orderId:string
+        date:Date
+    }[]
 
 
 }

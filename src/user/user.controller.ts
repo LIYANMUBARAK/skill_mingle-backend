@@ -175,7 +175,21 @@ export class UserController {
     return this.userService.sendWork(workDetails)
   }
    
-      
+
+  @Post('sendRevision')
+  sendRevision(@Body() reviseDetails:object ) {
+    return this.userService.sendRevision(reviseDetails)
+  }
+
+  @Post('completeOrder')
+  completeOrder(@Body() orderId:object ) {
+    return this.userService.completeOrder(orderId)
+  }
+   
+        @Post('addReview')
+  addReview(@Body() reviewDetails:object ) {
+    return this.userService.addReview(reviewDetails)
+  }
 }
 
 
