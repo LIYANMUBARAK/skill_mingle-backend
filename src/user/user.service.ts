@@ -313,7 +313,7 @@ export class UserService {
     async getGig(id: string) {
         const gigId = new Types.ObjectId(id)
 
-        const gigData = await this.gigModel.findOne({ _id: gigId }).populate('freelancerId')
+        const gigData = (await this.gigModel.findOne({ _id: gigId }).populate('freelancerId')) 
         return { gigData: gigData }
     }
 
@@ -622,6 +622,28 @@ export class UserService {
     } catch (error) {
         console.log(error.message)
     }
+   }
+
+  async changePassword(passwords){
+       try {
+       const {userId,oldPassword,newPassword,confirmPassword} = passwords
+     
+       const userObjectId = new Types.ObjectId(userId)
+       const userData = await this.userModel.findOne({_id:userObjectId})
+       
+       const passwordCheck = await bcrypt.compare(oldPassword, userData.password)
+        if(passwordCheck){
+        
+            const hashPassword = await bcrypt.hash(newPassword, 10)
+            await this.userModel.updateOne({_id:userObjectId},{$set:{password:hashPassword}})
+            return {passwordChange:true}
+    }
+        else{
+            return {incorrectOldPassword:true}
+        }
+       } catch (error) {
+        console.log(error.message)
+       }
    }
    
 }

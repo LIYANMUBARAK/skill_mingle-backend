@@ -190,6 +190,11 @@ export class UserController {
   addReview(@Body() reviewDetails:object ) {
     return this.userService.addReview(reviewDetails)
   }
+
+  @Post('changePassword')
+  changePassword(@Body() passwords:object ) {
+    return this.userService.changePassword(passwords)
+  }
 }
 
 

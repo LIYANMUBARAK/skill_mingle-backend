@@ -241,7 +241,7 @@ export class AdminService {
     }
 
     async getAllGigs(){
-        const gigsData=await this.gigModel.find()
+        const gigsData=await this.gigModel.find().populate('category').populate('subcategory')
         return {gigs:gigsData}
     }
 
