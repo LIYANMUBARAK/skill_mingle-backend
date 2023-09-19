@@ -195,6 +195,12 @@ export class UserController {
   changePassword(@Body() passwords:object ) {
     return this.userService.changePassword(passwords)
   }
+
+  @Get('getFreelancerById/:freelancerId')
+  getFreelancerById(@Param('freelancerId') freelancerId:string){
+    console.log(freelancerId)
+    return this.userService.getFreelancerById(freelancerId)
+  }
 }
 
 

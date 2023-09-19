@@ -313,7 +313,8 @@ export class UserService {
     async getGig(id: string) {
         const gigId = new Types.ObjectId(id)
 
-        const gigData = (await this.gigModel.findOne({ _id: gigId }).populate('freelancerId')) 
+        const gigData = (await this.gigModel.findOne({ _id: gigId }).populate('freelancerId'))
+        
         return { gigData: gigData }
     }
 
@@ -644,6 +645,17 @@ export class UserService {
        } catch (error) {
         console.log(error.message)
        }
+   }
+
+   async getFreelancerById(freelancerId:string){
+            try {
+                const freelancerObjectId = new Types.ObjectId(freelancerId)
+                const freelancerData = await this.freelancerModel.findOne({_id:freelancerObjectId})
+               console.log(freelancerData)
+                return freelancerData
+            } catch (error) {
+                console.log(error.message)
+            }
    }
    
 }
