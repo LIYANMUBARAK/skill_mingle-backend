@@ -1,5 +1,5 @@
 import { Schema, Prop, SchemaFactory } from '@nestjs/mongoose'
-import { Document, ObjectId, Types } from 'mongoose';
+import mongoose, { Document, ObjectId, Types } from 'mongoose';
 
 @Schema({ collection: 'gig' })
 export class gig extends Document {
@@ -59,7 +59,10 @@ export class gig extends Document {
     reviews:{
        rating:number
         message:string
-        userId:string
+        userId: {
+            type: mongoose.Schema.Types.ObjectId, // This should be of type ObjectId
+            ref: 'user', // This refers to the 'User' model
+          },
         orderId:string
         date:Date
     }[]

@@ -50,7 +50,11 @@ export class AppModule implements NestModule {
         { path: 'admin/login', method: RequestMethod.POST },
         { path: 'admin/verifyLogin', method: RequestMethod.POST },
         {path:'user/emailExist/:email',method:RequestMethod.GET},
-        {path:'user/sendPasswordResetEmail/:email',method:RequestMethod.GET}
+        {path:'user/sendPasswordResetEmail/:email',method:RequestMethod.GET},
+        {path:'user/getGigOfCategory/:categoryName',method:RequestMethod.GET},
+        {path:'user/getSubcategories/:categoryName',method:RequestMethod.GET},
+        {path:'user/getGig/:id',method:RequestMethod.GET},
+
       )
       .forRoutes('*');
   }

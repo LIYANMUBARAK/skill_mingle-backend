@@ -312,7 +312,7 @@ export class UserService {
 
     async getGig(id: string) {
         const gigId = new Types.ObjectId(id)
-
+        
         const gigData = (await this.gigModel.findOne({ _id: gigId }).populate('freelancerId'))
         
         return { gigData: gigData }
@@ -475,6 +475,7 @@ export class UserService {
     async orderSave(orderData){
         const {orderToken,gigId,freelancerId,userId,plan,price,deliveryTime,revision}=orderData
         const freelancerObjectId = new Types.ObjectId(freelancerId)
+        await this.userModel.updateOne({_id:freelancerObjectId},{$inc:{wallet:Number(price)}})
         const userObjectId = new Types.ObjectId(userId)
         const orderSave = new this.orderModel({
             orderToken:orderToken,
