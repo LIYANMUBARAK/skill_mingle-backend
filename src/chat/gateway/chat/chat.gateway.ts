@@ -5,7 +5,7 @@ import { Server, Socket } from 'socket.io';
 import { message } from 'src/helper/interfaces/message';
 import { ChatModel } from 'src/schemas/chat.schema';
 
-@WebSocketGateway({cors:{origin:['http://localhost:4200']}})
+@WebSocketGateway({cors:{origin:[process.env.FRONTEND_URL]}})
 export class ChatGateway implements OnGatewayConnection,OnGatewayDisconnect{
  
 
