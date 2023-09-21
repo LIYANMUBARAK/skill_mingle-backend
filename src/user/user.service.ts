@@ -658,6 +658,16 @@ export class UserService {
                 console.log(error.message)
             }
    }
+
+   async  getPendingOrdersForFreelancer(userId:string){
+    try {
+        const userObjectId = new Types.ObjectId(userId)
+       const pendingOrders = await this.orderModel.find({freelancer:userObjectId,completed:false}).populate('user').populate('gigId')
+        return pendingOrders
+    } catch (error) {
+        console.log(error.message)
+    }
+   }
    
 }
 

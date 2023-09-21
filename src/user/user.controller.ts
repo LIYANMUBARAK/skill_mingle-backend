@@ -201,6 +201,14 @@ export class UserController {
     console.log(freelancerId)
     return this.userService.getFreelancerById(freelancerId)
   }
+
+  @Get('getPendingOrdersForFreelancer/:userId')
+  getPendingOrdersForFreelancer(@Param('userId') userId:string){
+   
+    return this.userService.getPendingOrdersForFreelancer(userId)
+  }
+
+ 
 }
 
 
